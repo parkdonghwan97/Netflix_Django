@@ -37,8 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  #추가하고 저장.
+    
                                     # url ui 파일 추가하여 앱 자체를 기반으로 url을 모듈화 
     'core',
+
+
+    # thir party app  제 3자     정적파일 내부에 이름 추가 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
 ]
 
@@ -133,3 +141,30 @@ STATICFILES_DIRS=[
 # 의견 설정 추가 
 # Auth stting
 AUTH_USER_MODEL='core.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    
+    # Needed to login by username in Django admin, regardless of `allauth`
+    #"allauth"에 관계없이 Django 관리자에서 사용자 이름으로 로그인해야 함
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    # "allauth" 특정 인증 방법(예: 전자 메일로 로그인)
+    'allauth.account.auth_backends.AuthenticationBackend',
+    
+]
+
+SITE_ID = 1
+
+# 인증 방법 추가   이메일 로그인 or 사용자 이름 로그인  => 계정 로그인
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # 계정 인증 방법 -> 이메일
+ACCOUNT_EMAIL_REQUIRED = True  # 이메일 필수
+ACCOUNT_EMAIL_VERIFICATION = 'none' #  문자열 계정확인
+ACCOUNT_USERNAME_REQUIRED = False  # 사용자 이름 필수 아님
+# ACCOUNT_UNIQUE_EMAIL = True  # 이메일 유니크 
+
+# AutoBots 
+LOGIN_REDIRECT_URL = '/' # 리다이렉션 URL
+
+
