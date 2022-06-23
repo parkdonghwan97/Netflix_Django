@@ -1,11 +1,8 @@
 from django.shortcuts import redirect, render
-from django.views import View               #클래스 기반 접근 방식 사용.  
-
+from django.views import View             #클래스 기반 접근 방식 사용.  
 from django.contrib.auth.decorators import login_required # 로그인한 사용자만 열 수 있도록 함
 from django.utils.decorators import method_decorator
-
 from core.models import Movie, Profile # 디스패치를 장식하기 위해 생성된 메서드 사용 
-
 from .forms import ProfileForm # 프로필 양식
 
 class Home(View):
@@ -46,7 +43,7 @@ class ProfileCreate(View):
             print(form.cleaned_data)
             profile = Profile.objects.create(**form.cleaned_data) #profile변수에 생성된 데이터 저장 ( 프로필에 대한 로그인 선택을 위함)
             if profile:
-                request.user.profiles.add(profile) # 리다이렉션 수행 전 요청 ( 프로필 확인 )
+                request.user.profiles.add(profile)
                 return redirect('core:profile_list')
         return render(request,'profileCreate.html',
         {
@@ -58,13 +55,48 @@ class Watch(View):
         try:
             profile=Profile.objects.get(uuid=profile_id)  # 프로필을 받고 
             movies=Movie.objects.filter(age_limit=profile.age_limit)# DB에서 모든 영화수집 - 나이별 제한을 두어 필터링
+
+            try:
+                showcase=movies[0]
+            except :
+                showcase=None
+
             if profile not in request.user.profiles.all():#프로필 있는 지 확인 후 리다이렉트
                 return redirect(to='core:profile_list')  # 프로필 없는 경우 프로필 리스트로 리다이렉트
             
+            #print("============"*1000)
+            # print(profile)
+            # print("@@@",movies)
+            # print("@@@@",showcase)
             return render(request,'movieList.html',{
-                'movies':movies
-            }) # 프로필 있으면  준비된 영화목록  반환
+            'movies':movies,
+            'show_case':showcase,
+            })
+            # 프로필 있으면  준비된 영화목록  반환
         except Profile.DoesNotExist:  # 오류 or  프로필 확인 불가한 경우 예외 처리
             return redirect(to='core:profile_list')
              
 
+@method_decorator(login_required,name='dispatch')  
+class ShowMovieDetail(View):
+    def get(self,request,movie_id,*args, **kwargs):
+        try: # 영화 id로 확인 
+            movie=Movie.objects.get(uuid=movie_id)
+            return render(request,'movieDetail.html',{
+                'movie':movie,
+            })
+        except Movie.DoesNotExist:
+            return redirect('core:profile_list')
+
+@method_decorator(login_required,name='dispatch') 
+class ShowMovie(View): # 영화 보여주는 클래스       쿼리목록으로 만들어 list(movie)
+    def get(self,request,movie_id,*args, **kwargs):
+        try:
+            movie=Movie.objects.get(uuid=movie_id)
+            movie=movie.videos.values()
+            
+            return render(request,'showMovie.html',{
+                'movie':list(movie)
+            })
+        except Movie.DoesNotExist:
+            return redirect('core:profile_list')

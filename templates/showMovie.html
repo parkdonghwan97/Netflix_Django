@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 {% block title %}
-Movie
+Movie 
 {% endblock title %}
 
 {% block others %}
-
-<link rel="stylesheet" href="style.css">
 <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
 <style>
     .player::-webkit-progress-bar{
@@ -14,12 +12,49 @@ Movie
 </style>
 {% endblock others %}
 
-
 {% block content %}
-{% include 'partials.navbar.html' %}
+
+{% include 'partials/navbar.html' %}
 <main class='bg-primary_black h-full w-full '>
-    
-    <video src="assets/test.mp4" controls class="w-full h-screen player"></video>
+    {{movie |json_script:'movie_data' }}
+    <video src ="" controls class="w-full h-screen player"></video>
     
 </main>
+<script>
+    const videoEl = document.querySelector('video')
+    const movie_data = JSON.parse(document.getElementById('movie_data').textContent);  // 영화 목록 형태 에서 영화정보 가져옴
+    const url = new URL(location.href) // 작업 완료시 url 가져옴.
+    
+    // seasonal영화인경우 epi가 있음, 단일 영화인 경우 0으로 설정 
+    const video_param = parseInt(url.searchParams.get("epi")) ? parseInt(url.searchParams.get("epi")) : 0 
+    
+    videoEl.setAttribute('src',`http://localhost:8000/media/${movie_data[video_param].file}`) 
+    
+</script>
 {% endblock content %}
+{% comment %} 
+<main class='bg-primary_black h-full w-full '>
+    <!-- 프론트엔드에서 보낼 값을 전달하여 백엔드에서 보내짐 -> 보기 목록 형식  JSON사용-->
+    {{ movie|json_script:"movie_data" }}
+    
+    <video src="" controls class="w-full h-screen player"></video>
+</main>
+
+<script>
+    const videoEl = document.querySelector('video')
+    const movie_data = JSON.parse(document.getElementById('movie_data').textContent);  // 영화 목록 형태 에서 영화정보 가져옴
+    const url = new URL(location.href) // 작업 완료시 url 가져옴.
+    
+    // seasonal영화인경우 epi가 있음, 단일 영화인 경우 0으로 설정 
+    const video_param = parseInt(url.searchParams.get("epi")) ? parseInt(url.searchParams.get("epi")) : 0 
+    
+    videoEl.setAttribute('src',`http:/localhost:8000/media/${movie_data[video_param].file}`) //비디오 파일 순서대로 (epi)
+    
+</script>
+
+
+
+{% endblock content %} {% endcomment %}
+
+
+   

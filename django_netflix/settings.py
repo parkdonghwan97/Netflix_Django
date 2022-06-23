@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',  #추가하고 저장.
-    
+    'django.contrib.sites',
+     #추가하고 저장.
                                     # url ui 파일 추가하여 앱 자체를 기반으로 url을 모듈화 
     'core',
 
@@ -59,9 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'django_netflix.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -157,11 +155,10 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 # 인증 방법 추가   이메일 로그인 or 사용자 이름 로그인  => 계정 로그인
-
-ACCOUNT_AUTHENTICATION_METHOD = 'email'  # 계정 인증 방법 -> 이메일
-ACCOUNT_EMAIL_REQUIRED = True  # 이메일 필수
-ACCOUNT_EMAIL_VERIFICATION = 'none' #  문자열 계정확인
-ACCOUNT_USERNAME_REQUIRED = False  # 사용자 이름 필수 아님
+ACCOUNT_AUTHENTICATION_METHOD='email' #  계정 인증 방법 -> 이메일
+ACCOUNT_EMAIL_REQUIRED=True # 이메일 필수
+ACCOUNT_EMAIL_VERIFICATION='none'#  문자열 계정확인
+ACCOUNT_USERNAME_REQUIRED=False # 사용자 이름 필수 아님
 # ACCOUNT_UNIQUE_EMAIL = True  # 이메일 유니크 
 
 # AutoBots 
